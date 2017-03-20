@@ -27,10 +27,17 @@ class Joystick(Controller):
         joystick.init()
 
     def get_acceleration(self):
-        value = self.joystick.get_axis(2)
+        forward_value = self.get_absolute_axis_value(2)
+        backward_value = self.get_absolute_axis_value(5)
+        value = forward_value if forward_value > backward_value else -backward_value
+
         if math.fabs(value) < self.ACCELERATION_DEADZONE:
             value = 0
         return value
+
+    def get_absolute_axis_value(self, axis):
+        return (self.joystick.get_axis(axis) + 1) / 2
+
 
     def get_rotation(self):
         value = self.joystick.get_axis(0)
